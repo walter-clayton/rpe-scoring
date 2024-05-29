@@ -6,10 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "client-install": "npm install --prefix ../client",
-    "start": "npx nodemon --files ./index.ts",
-    "server": "nodemon --files ./index.ts",
-    "client": "npm run vite --prefix ../client",
-    "dev": "concurrently \" npm run server\" \"npm run client\""
+    "start": "npx nodemon ./index.ts",
+    "server": "nodemon ./index.ts",
+    "client": "npm run dev --prefix ../client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",

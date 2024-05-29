@@ -14,6 +14,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
+import Backdrop from "@mui/material/Backdrop";
+import { Theme } from "@mui/material/styles";
 
 const emojis = ["😆", "😋", "😊", "🙂", "😉", "😯", "😪", "😥", "😭", "😵"];
 const colors = [
@@ -32,8 +36,12 @@ const colors = [
 const RPEScore = () => {
   const [showImage, setShowImage] = useState(false);
   const [open, setOpen] = useState(false);
+  const [buttonsDisabled, setButtonsDisabled] = useState(false);
+  const [loading, setLoading] = useState(false); // Loading state for progress indicator
+  const [snackbarMessage, setSnackbarMessage] = useState<React.ReactNode>(""); // Snackbar message state
 
-  const handleOpen = () => {
+  const handleOpen = (message: React.ReactNode) => {
+    setSnackbarMessage(message);
     setOpen(true);
   };
 
@@ -48,10 +56,9 @@ const RPEScore = () => {
     setOpen(false);
   };
 
-  const [buttonsDisabled, setButtonsDisabled] = useState(false);
-
   const handleClick = async (num: number, emoji: string, colors: string) => {
     setButtonsDisabled(true);
+    setLoading(true); // Show progress indicator
 
     try {
       console.log("Sending POST request to backend...");
@@ -67,16 +74,30 @@ const RPEScore = () => {
 
       console.log("Response from backend:", response);
 
-      if (response.status !== 201) {
-        console.error("Error from server:", response.data);
-      } else {
+      if (response.status === 201) {
         console.log(`RPE data for ${emoji} clicked`);
-        handleOpen();
+        handleOpen(
+          <div>
+            <div>✅ You have registered your score!</div>
+            <div style={{ marginTop: "8px" }}>
+              {emoji} Your score is {num}.
+            </div>
+          </div>
+        );
+      } else {
+        console.error("Error from server:", response.data);
+        handleOpen(
+          <div>
+            <div>❌ There was a problem registering your score.</div>
+            <div style={{ marginTop: "8px" }}>Please try again.</div>
+          </div>
+        );
       }
     } catch (error) {
       console.error("Error saving RPE data:", error);
     } finally {
       setButtonsDisabled(false);
+      setLoading(false);
     }
   };
   const theme = useTheme();
@@ -104,11 +125,12 @@ const RPEScore = () => {
       style={{
         backgroundColor: "#000",
         minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
         color: "#fff",
-        position: "relative",
-        margin: 0, // Reset margin
-        padding: 166, // Reset padding
-        width: "100%",
+        width: "auto",
       }}
     >
       <Dialog open={dialogOpen} onClose={handlePasswordSubmit}>
@@ -150,39 +172,49 @@ const RPEScore = () => {
             </Typography>
           </Grid>
 
-          <Grid
-            container
-            justifyContent="center"
-            wrap={isSmallScreen ? "wrap" : "nowrap"}
-          >
-            {emojis.map((emoji, index) => (
-              <Grid
-                key={index}
-                item
-                xs={isSmallScreen ? 12 : "auto"}
-                style={{ textAlign: "center" }}
-              >
-                <Typography variant="h3" style={{ fontSize: "3em" }}>
-                  {emoji}
-                </Typography>
-                <Button
-                  variant="contained"
-                  style={{
-                    fontSize: "2em",
-                    color: "black",
-                    margin: "10px",
-                    padding: "0px 20px 0px 20px",
-                    backgroundColor: colors[index],
-                    borderRadius: "15px",
-                  }}
-                  onClick={() => handleClick(index + 1, emoji, colors[index])}
-                  disabled={buttonsDisabled} // Désactivez le bouton si buttonsDisabled est vrai
+          {loading ? (
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <CircularProgress size={100} />
+            </Box>
+          ) : (
+            <Grid
+              container
+              justifyContent="center"
+              alignItems="center"
+              wrap={isSmallScreen ? "wrap" : "nowrap"}
+            >
+              {emojis.map((emoji, index) => (
+                <Grid
+                  key={index}
+                  item
+                  xs={isSmallScreen ? 12 : "auto"}
+                  style={{ textAlign: "center" }}
                 >
-                  {index + 1}
-                </Button>
-              </Grid>
-            ))}
-          </Grid>
+                  <Typography
+                    variant="h3"
+                    style={{ fontSize: isSmallScreen ? "2em" : "3em" }}
+                  >
+                    {emoji}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    style={{
+                      fontSize: isSmallScreen ? "1em" : "2em",
+                      color: "black",
+                      margin: "10px",
+                      padding: "0px 20px 0px 20px",
+                      backgroundColor: colors[index],
+                      borderRadius: "15px",
+                    }}
+                    onClick={() => handleClick(index + 1, emoji, colors[index])}
+                    disabled={buttonsDisabled} // Désactivez le bouton si buttonsDisabled est vrai
+                  >
+                    {index + 1}
+                  </Button>
+                </Grid>
+              ))}
+            </Grid>
+          )}
 
           <Button
             startIcon={<ListAltIcon />}
@@ -227,8 +259,8 @@ const RPEScore = () => {
                   src={RPEChart}
                   alt="RPE Chart"
                   style={{
-                    maxWidth: "90vw",
-                    maxHeight: "90vh",
+                    maxWidth: isSmallScreen ? "80vw" : "90vw",
+                    maxHeight: isSmallScreen ? "80vh" : "90vh",
                   }}
                 />
                 <Button
@@ -247,28 +279,56 @@ const RPEScore = () => {
               </div>
             </div>
           )}
-          <Snackbar
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            open={open}
-            autoHideDuration={6000}
-            onClose={handleClose}
-            message="You have registered your score!"
-            action={
-              <React.Fragment>
-                <IconButton
-                  size="small"
-                  aria-label="close"
-                  color="inherit"
-                  onClick={handleClose}
-                >
-                  <CloseIcon fontSize="small" />
-                </IconButton>
-              </React.Fragment>
-            }
-          />
+
+          {open && (
+            <>
+              <Backdrop
+                open={open}
+                sx={{
+                  zIndex: (theme: Theme) => theme.zIndex.drawer + 1,
+                  color: "#fff",
+                  backgroundColor: "rgba(0, 0, 0, 0.8)",
+                }}
+              />
+              <div
+                style={{
+                  position: "fixed",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  zIndex: 1400,
+                }}
+              >
+                <Snackbar
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                  open={open}
+                  autoHideDuration={4000}
+                  onClose={handleClose}
+                  message={snackbarMessage}
+                  ContentProps={{
+                    sx: {
+                      textAlign: "left",
+                    },
+                  }}
+                  action={
+                    <React.Fragment>
+                      <IconButton
+                        size="small"
+                        aria-label="close"
+                        color="inherit"
+                        onClick={handleClose}
+                      >
+                        <CloseIcon fontSize="small" />
+                      </IconButton>
+                    </React.Fragment>
+                  }
+                />
+              </div>
+            </>
+          )}
         </>
       )}
     </div>

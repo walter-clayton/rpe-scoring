@@ -44,10 +44,10 @@ const RPEDashboard = () => {
   };
 
   const getLastSevenDays = () => {
-    let lastSevenDays = [];
+    const lastSevenDays = [];
 
     for (let i = 0; i < 7; i++) {
-      let date = new Date();
+      const date = new Date();
       date.setDate(date.getDate() - i);
       lastSevenDays.push(date);
     }
@@ -176,7 +176,7 @@ const RPEDashboard = () => {
         color: "white",
         position: "relative",
         margin: -10,
-        padding: 100,
+        paddingTop: 300,
       }}
       justifyContent="center"
       alignItems="center"

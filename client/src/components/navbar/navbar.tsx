@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
+//import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
@@ -22,6 +22,7 @@ const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const navigate = useNavigate();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleOpenNavMenu = (event: any) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -36,9 +37,10 @@ const ResponsiveAppBar = () => {
       sx={{
         top: 0,
         left: 0,
-        width: "100%",
+        width: "auto",
         background: "black",
         margin: 0,
+        padding: 0,
       }}
     >
       <Container maxWidth={false}>
@@ -46,7 +48,7 @@ const ResponsiveAppBar = () => {
           <IconButton
             sx={{ p: 0, cursor: "pointer" }}
             onClick={() => {
-              navigate("/");
+              navigate("/RPEScore");
               window.scrollTo(0, 0);
             }}
           >
@@ -132,11 +134,11 @@ const ResponsiveAppBar = () => {
             sx={{
               flexGrow: 1,
               display: { xs: "none", md: "flex" },
-              justifyContent: "center",
+              justifyContent: "flex-end",
             }}
           >
             {RPEOptions.map((option, index) => (
-              <Button
+              <MenuItem
                 key={index}
                 onClick={() => {
                   navigate(option.path);
@@ -145,7 +147,7 @@ const ResponsiveAppBar = () => {
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {option.title}
-              </Button>
+              </MenuItem>
             ))}
           </Box>
         </Toolbar>
