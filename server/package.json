@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "client-install": "npm install --prefix ../client",
+    "build": "tsc",
     "start": "npx nodemon ./index.ts",
     "server": "nodemon ./index.ts",
     "client": "npm run dev --prefix ../client",

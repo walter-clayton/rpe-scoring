@@ -4,35 +4,40 @@ const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 import rpeRoutes from "./routes/rpe.routes";
 require("./database");
+import { VercelRequest, VercelResponse } from "@vercel/node";
 
-const app: Express = express();
-dotenv.config();
+export default function handler(req: VercelRequest, res: VercelResponse) {
+  // Your server logic here res.status(200).json({ message: ‘Hello from Vercel Serverless Function!’ });
 
-const corsOptions = {
-  origin: [
-    "http://localhost:5173",
-    "https://www.afitpilot.com/",
-    "https://rpe-scoring.vercel.app/",
-  ],
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true,
-  optionsSuccessStatus: 200,
-};
+  const app: Express = express();
+  dotenv.config();
 
-app.use(cors(corsOptions));
+  const corsOptions = {
+    origin: [
+      "http://localhost:5173",
+      "https://www.afitpilot.com/",
+      "https://rpe-scoring.vercel.app/",
+    ],
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+    optionsSuccessStatus: 200,
+  };
 
-const PORT: number = parseInt(process.env.PORT!) || 4000;
-app.set("port", PORT);
+  app.use(cors(corsOptions));
 
-app.use(bodyParser.json({ limit: "50mb" }));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.json({ limit: "50mb" }));
-app.use(
-  express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
-);
+  const PORT: number = parseInt(process.env.PORT!) || 4000;
+  app.set("port", PORT);
 
-app.use("/rpe", rpeRoutes);
+  app.use(bodyParser.json({ limit: "50mb" }));
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(express.json({ limit: "50mb" }));
+  app.use(
+    express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
+  );
 
-app.listen(PORT, () => {
-  console.log(`Server running on ${PORT}`);
-});
+  app.use("/rpe", rpeRoutes);
+
+  app.listen(PORT, () => {
+    console.log(`Server running on ${PORT}`);
+  });
+}
