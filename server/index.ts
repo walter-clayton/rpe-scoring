@@ -9,7 +9,11 @@ const app: Express = express();
 dotenv.config();
 
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://www.afitpilot.com/"],
+  origin: [
+    "http://localhost:5173",
+    "https://www.afitpilot.com/",
+    "https://rpe-scoring.vercel.app/",
+  ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
   optionsSuccessStatus: 200,

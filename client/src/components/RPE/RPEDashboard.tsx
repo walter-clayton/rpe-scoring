@@ -24,9 +24,7 @@ const RPEDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:4000/rpe" /*process.env.REACT_APP_RPEPOST_URL!*/
-      );
+      const response = await axios.get(import.meta.env.VITE_API_RPEPOST_URL);
 
       if (response.data.rpeData) {
         const rpeDataWithDate = response.data.rpeData.map((d: RPEData) => ({
