@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import * as d3 from "d3";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography, Box } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 
@@ -123,7 +123,7 @@ const RPEDashboard = () => {
               x.bandwidth() / 2 -
               barWidth / 2
           )
-          .attr("y", y(d.averageScore)) // Set y to the scale of the average score
+          .attr("y", y(d.averageScore))
           .attr("width", barWidth)
           .attr("height", barHeight)
           .attr("fill", d.color)
@@ -168,48 +168,61 @@ const RPEDashboard = () => {
   }, [data]);
 
   return (
-    <Grid
-      container
-      style={{
+    <Box
+      sx={{
         backgroundColor: "black",
         minHeight: "100vh",
-        color: "white",
-        position: "relative",
-        margin: -10,
-        paddingTop: 300,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#fff",
+        width: "100%",
+        paddingTop: 10,
+        margin: 0,
       }}
-      justifyContent="center"
-      alignItems="center"
     >
-      <Grid item xs={12}>
-        <Typography
-          variant={isSmallScreen ? "h3" : "h1"}
-          align="center"
-          gutterBottom
-        >
-          RPE DASHBOARD
-        </Typography>
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        sx={{ flex: 1 }}
+      >
+        <Grid item xs={12}>
+          <Typography
+            variant={isSmallScreen ? "h3" : "h1"}
+            align="center"
+            gutterBottom
+          >
+            RPE DASHBOARD
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography
+            variant={isSmallScreen ? "h5" : "h3"}
+            align="center"
+            gutterBottom
+          >
+            Last 7 days
+          </Typography>
+        </Grid>
+        <Grid item sm={10}>
+          <svg
+            className="d3-component"
+            width="100%"
+            height="100%"
+            viewBox="0 0 960 580"
+            preserveAspectRatio="xMidYMid slice"
+            ref={d3Container}
+            style={{
+              display: "block",
+              margin: "0 auto",
+              marginBottom: 0,
+            }}
+          />
+        </Grid>
       </Grid>
-      <Grid item xs={12}>
-        <Typography
-          variant={isSmallScreen ? "h5" : "h3"}
-          align="center"
-          gutterBottom
-        >
-          Last 7 days
-        </Typography>
-      </Grid>
-      <Grid item sm={10}>
-        <svg
-          className="d3-component"
-          width="100%"
-          height="100%"
-          viewBox="0 0 960 580"
-          preserveAspectRatio="xMidYMid meet"
-          ref={d3Container}
-        />
-      </Grid>
-    </Grid>
+    </Box>
   );
 };
 

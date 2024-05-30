@@ -97,7 +97,7 @@ const RPEScore = () => {
       console.error("Error saving RPE data:", error);
     } finally {
       setButtonsDisabled(false);
-      setLoading(false);
+      setLoading(false); // Hide progress indicator
     }
   };
   const theme = useTheme();
@@ -121,16 +121,17 @@ const RPEScore = () => {
   }, []);
 
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         backgroundColor: "#000",
-        minHeight: "100vh",
+        minHeight: "70vh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         color: "#fff",
-        width: "auto",
+        width: "100%",
+        padding: 2,
       }}
     >
       <Dialog open={dialogOpen} onClose={handlePasswordSubmit}>
@@ -207,7 +208,7 @@ const RPEScore = () => {
                       borderRadius: "15px",
                     }}
                     onClick={() => handleClick(index + 1, emoji, colors[index])}
-                    disabled={buttonsDisabled} // Désactivez le bouton si buttonsDisabled est vrai
+                    disabled={buttonsDisabled}
                   >
                     {index + 1}
                   </Button>
@@ -331,7 +332,7 @@ const RPEScore = () => {
           )}
         </>
       )}
-    </div>
+    </Box>
   );
 };
 

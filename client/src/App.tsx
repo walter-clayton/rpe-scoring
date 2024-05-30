@@ -3,6 +3,7 @@ import ResponsiveAppBar from "../src/components/navbar/navbar";
 import RPEScore from "./components/RPE/RPEScore";
 import RPEDashboard from "./components/RPE/RPEDashboard";
 import "./App.css";
+import "./global.css";
 
 function App() {
   return (
