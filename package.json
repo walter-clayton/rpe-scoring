@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "@vercel/node": "^3.1.5"
+  },
+  "scripts": {
+    "build": "echo \"Error: mon script\" && exit 1"
   }
 }

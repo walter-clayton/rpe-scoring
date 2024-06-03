@@ -22,7 +22,7 @@ function getEmojiAndColor(score: number) {
   return { emoji: emojis[index], color: colors[index] };
 }
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/rpe", async (req: Request, res: Response) => {
   try {
     const { emoji, numeroClique, colors } = req.body;
     const rpeData = new RPE({ emoji, numeroClique, colors });
@@ -40,7 +40,7 @@ router.post("/", async (req: Request, res: Response) => {
     }
   }
 });
-router.get("/", async (req: Request, res: Response) => {
+router.get("/rpe", async (req: Request, res: Response) => {
   try {
     const rpeData = await RPE.aggregate([
       {

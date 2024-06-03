@@ -63,11 +63,15 @@ const RPEScore = () => {
     try {
       console.log("Sending POST request to backend...");
 
-      const response = await axios.post(import.meta.env.VITE_API_RPEPOST_URL, {
-        emoji: emoji,
-        numeroClique: num,
-        colors: colors,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_RPEPOST_URL}`,
+        {
+          emoji: emoji,
+          numeroClique: num,
+          colors: colors,
+        },
+        { withCredentials: true }
+      );
 
       console.log("Response from backend:", response);
 
