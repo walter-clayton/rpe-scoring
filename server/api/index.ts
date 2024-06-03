@@ -13,7 +13,7 @@ const corsOptions = {
     "http://localhost:5173",
     "https://www.afitpilot.com/",
     "https://rpe-scoring-front.vercel.app",
-    "https://rpe-scoring-front-github.vercel.app",
+    process.env.FRONTEND_URL,
   ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
