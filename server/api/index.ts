@@ -12,7 +12,7 @@ const corsOptions = {
   origin: [
     "http://localhost:5173",
     "https://www.afitpilot.com/",
-    "https://rpe-scoring.vercel.app/",
+    "https://rpe-scoring-front.vercel.app",
   ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
