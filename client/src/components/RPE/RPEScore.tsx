@@ -175,7 +175,10 @@ const RPEScore = () => {
           </Grid>
 
           {loading ? (
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Box
+              sx={{ display: "flex", justifyContent: "center" }}
+              data-testid="loader"
+            >
               <CircularProgress size={100} />
             </Box>
           ) : (
@@ -210,6 +213,7 @@ const RPEScore = () => {
                     }}
                     onClick={() => handleClick(index + 1, emoji, colors[index])}
                     disabled={buttonsDisabled}
+                    data-testid={`score-button-${index + 1}`}
                   >
                     {index + 1}
                   </Button>
