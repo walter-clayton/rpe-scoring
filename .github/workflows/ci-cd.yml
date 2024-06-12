@@ -1,0 +1,111 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - RS-1
+  pull_request:
+    branches:
+      - RS-1
+
+jobs:
+  test_and_build_client:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: cd client && npm install
+
+    - name: Run client tests
+      run: cd client && npm run test:ci
+      env:
+        CI: true
+        REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+        REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
+
+    - name: Build client
+      run: cd client && npm run build
+      env:
+        REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+        REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
+
+  test_and_build_server:
+    runs-on: ubuntu-latest
+    needs: test_and_build_client
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: cd server && npm install
+
+    - name: Run server tests
+      run: cd server && npm run test:ci
+      env:
+        CI: true
+        MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        MONGODB_DBNAME: ${{ secrets.MONGODB_DBNAME }}
+        PORT: ${{ secrets.PORT }}
+        ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+        FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+
+    - name: Build server
+      run: cd server && npm run build
+      env:
+        MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        MONGODB_DBNAME: ${{ secrets.MONGODB_DBNAME }}
+        PORT: ${{ secrets.PORT }}
+        ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+        FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [test_and_build_client, test_and_build_server]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build the project
+      run: npm run build
+
+    - name: Deploy to Server
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SERVER_USER: ${{ secrets.SERVER_USER }}
+        SERVER_HOST: ${{ secrets.SERVER_HOST }}
+        MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        MONGODB_DBNAME: ${{ secrets.MONGODB_DBNAME }}
+        PORT: ${{ secrets.PORT }}
+        ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+        FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+      run: |
+        echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+        ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST "
+          cd /path/to/project/root &&
+          git pull &&
+          cd server &&
+          npm install &&
+          npm run build"
