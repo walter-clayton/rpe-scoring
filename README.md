@@ -40,9 +40,29 @@ FRONTEND_URL=http://localhost:5173
 
 ```
 
+## Environment Variables
+
+Create a .env file in both the client and server directories with the necessary environment variables. Example for the server:
+
+```bash
+
+MONGODB_URI=your-mongodb-uri
+MONGODB_DBNAME=your-db-name
+PORT=4000
+ACCESS_KEY=your-access-key
+FRONTEND_URL=http://localhost:5174
+
+```
+
 ### Contributions
 
-Please go to this [page](CONTRIBUTIONS.md).
+> Please go to this [page](CONTRIBUTIONS.md) for contributions.
+
+Follow the project's coding standards and style guides.
+
+- Ensure your code is well-documented.
+- Write meaningful commit messages.
+- Create a pull request (PR) to the RS-1 branch once your feature or bug fix is complete.
 
 ### Author
 

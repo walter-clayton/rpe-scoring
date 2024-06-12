@@ -2,9 +2,20 @@
 
 Welcome to RPE Scoring for developers! We are excited to have you onboard and look forward to your contributions towards the development of our web app. This document outlines the process that every team member should follow to contribute code to the project. By adhering to these guidelines, we can ensure a smooth and efficient workflow for everyone involved.
 
+## Table of Contents
+
+1. [Getting Started](#getting-started)
+2. [Workflow Overview](#workflow-overview)
+3. [Best Practices](#best-practices)
+
 ## Getting Started
 
 Before you begin contributing, make sure you have a GitHub account and Git installed on your local machine. Familiarize yourself with the basics of Git and GitHub.
+
+### Additional Resources
+
+- [Using GitHub Actions](USING_GITHUB_ACTIONS.md)
+- [Writing Tests](WRITING_TESTS.md)
 
 ## Workflow Overview
 
@@ -74,7 +85,7 @@ git branch -d <branch-name>
 git push origin --delete <branch-name>
 ```
 
-### Best Practices
+## Best Practices
 
 - Always work in a branch specific to your task.
 - Keep your branches small and focused on a single feature or bug fix.
