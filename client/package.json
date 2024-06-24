@@ -11,7 +11,8 @@
     "test": "vitest run",
     "start": "vite",
     "test:ci": "react-scripts test --watchAll=false",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "postinstall": "chmod +x ./node_modules/.bin/tsc"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
