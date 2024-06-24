@@ -1,7 +1,7 @@
 {
   "name": "client",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --open",
@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "start": "vite",
-    "test:ci": "react-scripts test --watchAll=false"
+    "test:ci": "react-scripts test --watchAll=false",
+    "serve": "vite preview"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
