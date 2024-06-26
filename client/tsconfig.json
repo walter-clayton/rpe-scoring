@@ -17,5 +17,9 @@
     "esModuleInterop": true,
     "types": ["vite/client", "vitest/globals", "vitest", "node", "@testing-library/jest-dom"]
   },
-  "include": ["src", "src/types"]
+  "include": ["src",
+  "src/**/*",
+  "src/types",
+  "**/*.spec.ts",
+  "**/*.d.ts"]
 }
