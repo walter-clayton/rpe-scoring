@@ -201,7 +201,7 @@ const RPEDashboard = () => {
             align="center"
             gutterBottom
           >
-            Last 7 days testing
+            Last 7 days
           </Typography>
         </Grid>
         <Grid item sm={10}>
