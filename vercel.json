@@ -19,15 +19,5 @@
       "src": "/(.*)",
       "dest": "/client/dist/$1"
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/server/dist/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/client/dist/$1"
-    }
   ]
 }
