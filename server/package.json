@@ -10,7 +10,7 @@
     "start": "npx nodemon api/index.ts",
     "server": "nodemon api/index.ts",
     "client": "npm run dev --prefix ../client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "nodemon api/index.ts"
   },
   "repository": {
     "type": "git",
@@ -33,6 +33,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/node": "^20.12.12",
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.4"
   }
 }
