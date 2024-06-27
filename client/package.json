@@ -1,7 +1,7 @@
 {
   "name": "client",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --open",
@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "test": "vitest run",
     "start": "vite",
-    "test:ci": "react-scripts test --watchAll=false"
+    "postinstall": "chmod +x ./node_modules/.bin/tsc",
+    "test:ci": "react-scripts test --watchAll=false",
+    "serve": "vite preview"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -27,7 +29,7 @@
     "@testing-library/react": "^16.0.0",
     "@types/d3": "^7.4.3",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.12.12",
+    "@types/node": "^20.14.8",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
@@ -39,7 +41,7 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "jsdom": "^24.1.0",
     "typescript": "^5.4.5",
-    "vite": "^5.2.0",
+    "vite": "^5.3.1",
     "vitest": "^1.6.0"
   }
 }

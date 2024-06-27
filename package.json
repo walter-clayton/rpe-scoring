@@ -3,6 +3,13 @@
     "@vercel/node": "^3.1.5"
   },
   "scripts": {
-    "build": "echo \"Error: mon script\" && exit 1"
+    "client": "npm run dev --prefix client",
+    "server": "npm run dev --prefix server",
+    "build": "npm run build --prefix client && npm run build --prefix server",
+    "start": "npm run server",
+    "dev": "concurrently \"npm run client\" \"npm run server\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }

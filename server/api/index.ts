@@ -2,6 +2,7 @@ import express, { Express } from "express";
 const cors = require("cors");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
+import path from "path";
 import rpeRoutes from "../routes/rpe.routes";
 require("./database");
 
@@ -33,7 +34,17 @@ app.use(
   express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
 );
 
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, "../client/dist")));
+
+// API routes
 app.use("/api", rpeRoutes);
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/dist", "index.html"));
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);

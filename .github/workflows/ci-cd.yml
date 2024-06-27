@@ -4,35 +4,39 @@ on:
   push:
     branches:
       - main
+      - staging
+      - RS-4
   pull_request:
     branches:
       - main
+      - staging
+      - RS-4
 
 jobs:
   test_and_build_client:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
 
-    - name: Install dependencies
-      run: cd client && npm install
+      - name: Install dependencies
+        run: cd client && npm install
 
-    - name: Run client tests
-      run: cd client && npm run test
-      env:
-        CI: true
-        REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-        REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
+      - name: Run client tests
+        run: cd client && npm run test
+        env:
+          CI: true
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+          REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
 
-    - name: Build client
-      run: cd client && npm run build
-      env:
-        REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-        REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
+      - name: Build client
+        run: cd client && npm run build
+        env:
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+          REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
