@@ -1,4 +1,11 @@
 {
+  "routes": [
+    {
+      "src": "/[^.]+",
+      "dest": "/",
+      "status": 200
+    }
+  ],
   "functions": {
     "api/**/*.js": {
       "runtime": "nodejs16.x"
