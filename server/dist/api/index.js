@@ -8,7 +8,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const rpe_routes_1 = __importDefault(require("../routes/rpe.routes"));
-const path = require("path");
+const path = require("path"); // Import path module
 require("./database");
 
 const app = (0, express_1.default)();
@@ -36,6 +36,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express_1.default.json({ limit: "50mb" }));
 app.use(express_1.default.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 
+// API routes
 app.use("/api", rpe_routes_1.default);
 
 // Serve static files from the React app
@@ -43,7 +44,7 @@ app.use(express_1.default.static(path.join(__dirname, '../client/build')));
 
 // The "catchall" handler: for any request that doesn't match one above, send back React's index.html file.
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
 });
 
 app.listen(PORT, () => {
