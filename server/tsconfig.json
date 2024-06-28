@@ -2,12 +2,12 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "commonjs",
-    "outDir": "./dist",  // Ensure the output directory is set to "dist"
+    "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["api/**/*.ts"],  // Include TypeScript files in the api directory
+  "include": ["api/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
