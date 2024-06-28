@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -32,11 +23,11 @@ function getEmojiAndColor(score) {
     const index = Math.round(score) - 1;
     return { emoji: emojis[index], color: colors[index] };
 }
-router.post("/rpe", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/rpe", async (req, res) => {
     try {
         const { emoji, numeroClique, colors } = req.body;
         const rpeData = new RpeModels_1.default({ emoji, numeroClique, colors });
-        yield rpeData.save();
+        await rpeData.save();
         console.log("RPE data saved successfully");
         res.status(201).json({ message: "RPE data saved successfully" }); // Ensure status code is 201
     }
@@ -49,10 +40,10 @@ router.post("/rpe", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             res.status(500).json({ error: "An unknown error occurred" });
         }
     }
-}));
-router.get("/rpe", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+});
+router.get("/rpe", async (req, res) => {
     try {
-        const rpeData = yield RpeModels_1.default.aggregate([
+        const rpeData = await RpeModels_1.default.aggregate([
             {
                 $group: {
                     _id: { $dateToString: { format: "%Y-%m-%d", date: "$dateClique" } },
@@ -62,7 +53,7 @@ router.get("/rpe", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         ]);
         const rpeDataWithEmojiAndColor = rpeData.map((data) => {
             const { emoji, color } = getEmojiAndColor(data.averageScore);
-            return Object.assign(Object.assign({}, data), { emoji, color });
+            return { ...data, emoji, color };
         });
         res.status(200).json({ rpeData: rpeDataWithEmojiAndColor });
     }
@@ -70,5 +61,5 @@ router.get("/rpe", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         console.error("Error fetching RPE data:", err);
         res.status(500).json({ error: "Internal Server Error" });
     }
-}));
+});
 exports.default = router;
