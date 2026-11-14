@@ -4,8 +4,8 @@
 
 The live demo at https://rpe.afitpilot.com runs on the client alone: scores are
 saved in the visitor's browser (`client/src/lib/rpeStore.ts`), and it is hosted
-as a static site on Cloudflare Pages (root `client`, build `npm run build`,
-output `dist`). The Express and MongoDB server in `server/` is the original
+as static files on Cloudflare Workers (root `client`, build `npm run build`,
+deploy `npx wrangler deploy`, settings in `client/wrangler.jsonc`). The Express and MongoDB server in `server/` is the original
 version and is no longer deployed.
 
 ## Quick Start
