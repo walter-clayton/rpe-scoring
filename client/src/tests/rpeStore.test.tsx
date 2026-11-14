@@ -11,7 +11,7 @@ describe("rpeStore", () => {
 
     expect(days.map((d) => d._id.getDate())).toEqual([13, 14]);
     expect(days[1].averageScore).toBe(6);
-    expect(days[1].emoji).toBe("🤨");
+    expect(days[1].emoji).toBe("😯");
     expect(days[1].color).toBe("#7dd957");
   });
 

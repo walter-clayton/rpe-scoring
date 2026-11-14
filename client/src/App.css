@@ -1,21 +1,5 @@
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-  background-color: black;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
+html,
 body {
-  scroll-behavior: smooth;
   background-color: black;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
+  overflow-x: hidden;
 }
