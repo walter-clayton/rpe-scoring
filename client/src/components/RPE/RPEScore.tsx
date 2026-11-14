@@ -1,22 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import RPEChart from "../../assets/RPE-Chart.png";
 import { saveScore } from "../../lib/rpeStore";
-import { Grid, Typography, Button } from "@mui/material";
+import { Box, Button, Dialog, IconButton, Snackbar, Typography } from "@mui/material";
 import ListAltIcon from "@mui/icons-material/ListAlt";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { useTheme } from "@mui/material/styles";
-import Snackbar from "@mui/material/Snackbar";
-import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import Backdrop from "@mui/material/Backdrop";
-import { Theme } from "@mui/material/styles";
 
 const emojis = ["😆", "😋", "😊", "🙂", "😉", "😯", "😪", "😥", "😭", "😵"];
 const colors = [
@@ -33,275 +20,131 @@ const colors = [
 ];
 
 const RPEScore = () => {
-  const [showImage, setShowImage] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState<React.ReactNode>(""); // Snackbar message state
+  const [showChart, setShowChart] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
 
-  const handleOpen = (message: React.ReactNode) => {
-    setSnackbarMessage(message);
-    setOpen(true);
-  };
-
-  const handleClose = (
-    _event: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-  const handleClick = (num: number, emoji: string) => {
+  const handleClick = (num: number) => {
     try {
       saveScore(num);
-      handleOpen(
-        <div>
-          <div>✅ You have registered your score!</div>
-          <div style={{ marginTop: "8px" }}>
-            {emoji} Your score is {num}.
-          </div>
-        </div>
-      );
+      setMessage(`Score saved: ${num} out of 10.`);
     } catch (error) {
       console.error("Error saving RPE data:", error);
-      handleOpen(
-        <div>
-          <div>❌ There was a problem registering your score.</div>
-          <div style={{ marginTop: "8px" }}>
-            Your browser is not allowing this page to save data.
-          </div>
-        </div>
-      );
+      setMessage("Your browser is not allowing this page to save scores.");
     }
   };
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const [dialogOpen, setDialogOpen] = useState(true);
-
-  const [password, setPassword] = useState("");
-
-  const handlePasswordSubmit = () => {
-    if (password === "123") {
-      setDialogOpen(false);
-    } else {
-      setPassword("");
-      alert("Incorrect password");
-    }
-  };
-
-  useEffect(() => {
-    setDialogOpen(true);
-  }, []);
 
   return (
     <Box
+      component="main"
       sx={{
-        backgroundColor: "#000",
-        minHeight: "70vh",
+        minHeight: "100vh",
+        boxSizing: "border-box",
+        pt: { xs: 11, md: 13 },
+        pb: 6,
+        px: 2,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
         color: "#fff",
-        width: "100%",
-        padding: 2,
       }}
     >
-      <Dialog open={dialogOpen} onClose={handlePasswordSubmit}>
-        <DialogTitle>Enter Password</DialogTitle>
+      <Typography
+        component="h1"
+        align="center"
+        sx={{ fontSize: { xs: "2.5rem", sm: "3.5rem", md: "4.5rem" }, fontWeight: 300, lineHeight: 1.1 }}
+      >
+        RPE SCORE
+      </Typography>
+      <Typography
+        align="center"
+        sx={{ mt: 1.5, mb: { xs: 3, md: 5 }, color: "rgba(255,255,255,0.7)", maxWidth: 520 }}
+      >
+        How hard was your session? Tap a number from 1 (very easy) to 10
+        (maximal effort).
+      </Typography>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handlePasswordSubmit();
-          }}
-        >
-          <DialogContent>
-            <DialogContentText>
-              To access this page, please enter your password.
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="password"
-              label="Password"
-              type="password"
-              fullWidth
-              variant="standard"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handlePasswordSubmit}>Submit</Button>
-          </DialogActions>
-        </form>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "repeat(2, 1fr)",
+            sm: "repeat(5, 1fr)",
+            lg: "repeat(10, 1fr)",
+          },
+          gap: { xs: 1.5, md: 2 },
+          width: "100%",
+          maxWidth: { xs: 420, sm: 720, lg: 1200 },
+        }}
+      >
+        {emojis.map((emoji, index) => (
+          <Button
+            key={index}
+            onClick={() => handleClick(index + 1)}
+            data-testid={`score-button-${index + 1}`}
+            aria-label={`Score ${index + 1}`}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 0.5,
+              py: { xs: 1.5, md: 2 },
+              borderRadius: "16px",
+              backgroundColor: colors[index],
+              color: "#000",
+              textTransform: "none",
+              "&:hover": { backgroundColor: colors[index], filter: "brightness(1.1)" },
+            }}
+          >
+            <Box component="span" aria-hidden sx={{ fontSize: { xs: "2rem", md: "2.5rem" }, lineHeight: 1 }}>
+              {emoji}
+            </Box>
+            <Box component="span" sx={{ fontSize: { xs: "1.5rem", md: "1.75rem" }, fontWeight: 700, lineHeight: 1 }}>
+              {index + 1}
+            </Box>
+          </Button>
+        ))}
+      </Box>
+
+      <Button
+        startIcon={<ListAltIcon />}
+        onClick={() => setShowChart(true)}
+        sx={{
+          mt: { xs: 4, md: 6 },
+          px: 4,
+          py: 1.25,
+          borderRadius: "40px",
+          color: "#fff",
+          backgroundColor: "rgb(108, 77, 123)",
+          "&:hover": { backgroundColor: "rgb(128, 92, 146)" },
+        }}
+      >
+        RPE Chart
+      </Button>
+
+      <Dialog open={showChart} onClose={() => setShowChart(false)} maxWidth="md" fullWidth>
+        <Box sx={{ position: "relative", p: { xs: 1, sm: 2 }, backgroundColor: "#000" }}>
+          <IconButton
+            aria-label="Close chart"
+            onClick={() => setShowChart(false)}
+            sx={{ position: "absolute", top: 8, right: 8, color: "#fff", backgroundColor: "rgba(0,0,0,0.6)" }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <Box
+            component="img"
+            src={RPEChart}
+            alt="RPE Chart"
+            sx={{ display: "block", width: "100%", height: "auto", maxHeight: "85vh", objectFit: "contain" }}
+          />
+        </Box>
       </Dialog>
 
-      {!dialogOpen && (
-        <>
-          <Grid container justifyContent="center" alignItems="center">
-            <Typography variant="h1" align="center" gutterBottom>
-              RPE SCORE
-            </Typography>
-          </Grid>
-
-          <Grid
-              container
-              justifyContent="center"
-              alignItems="center"
-              wrap={isSmallScreen ? "wrap" : "nowrap"}
-            >
-              {emojis.map((emoji, index) => (
-                <Grid
-                  key={index}
-                  item
-                  xs={isSmallScreen ? 12 : "auto"}
-                  style={{ textAlign: "center" }}
-                >
-                  <Typography
-                    variant="h3"
-                    style={{ fontSize: isSmallScreen ? "2em" : "3em" }}
-                  >
-                    {emoji}
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    style={{
-                      fontSize: isSmallScreen ? "1em" : "2em",
-                      color: "black",
-                      margin: "10px",
-                      padding: "0px 20px 0px 20px",
-                      backgroundColor: colors[index],
-                      borderRadius: "15px",
-                    }}
-                    onClick={() => handleClick(index + 1, emoji)}
-                    data-testid={`score-button-${index + 1}`}
-                  >
-                    {index + 1}
-                  </Button>
-                </Grid>
-              ))}
-            </Grid>
-
-          <Button
-            startIcon={<ListAltIcon />}
-            style={{
-              position: "fixed",
-              right: "20px",
-              bottom: "20px",
-              color: "#fff",
-              padding: "10px 50px 10px 50px",
-              borderRadius: "40px",
-              backgroundColor: "RGB(108, 77, 123)",
-              zIndex: 1000,
-            }}
-            onClick={() => setShowImage(true)}
-          >
-            RPE Chart
-          </Button>
-
-          {showImage && (
-            <div
-              style={{
-                position: "fixed",
-                top: "0",
-                left: "0",
-                width: "100%",
-                height: "100%",
-                backgroundColor: "rgba(0, 0, 0, 0.5)",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <div
-                style={{
-                  position: "relative",
-                  backgroundColor: "black",
-                  padding: "20px",
-                  borderRadius: "10px",
-                }}
-              >
-                <img
-                  src={RPEChart}
-                  alt="RPE Chart"
-                  style={{
-                    maxWidth: isSmallScreen ? "80vw" : "90vw",
-                    maxHeight: isSmallScreen ? "80vh" : "90vh",
-                  }}
-                />
-                <Button
-                  style={{
-                    position: "absolute",
-                    top: "10px",
-                    right: "10px",
-
-                    color: "white",
-                    borderRadius: "50%",
-                  }}
-                  onClick={() => setShowImage(false)}
-                >
-                  X
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {open && (
-            <>
-              <Backdrop
-                open={open}
-                sx={{
-                  zIndex: (theme: Theme) => theme.zIndex.drawer + 1,
-                  color: "#fff",
-                  backgroundColor: "rgba(0, 0, 0, 0.8)",
-                }}
-              />
-              <div
-                style={{
-                  position: "fixed",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  zIndex: 1400,
-                }}
-              >
-                <Snackbar
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "center",
-                  }}
-                  open={open}
-                  autoHideDuration={4000}
-                  onClose={handleClose}
-                  message={snackbarMessage}
-                  ContentProps={{
-                    sx: {
-                      textAlign: "left",
-                    },
-                  }}
-                  action={
-                    <React.Fragment>
-                      <IconButton
-                        size="small"
-                        aria-label="close"
-                        color="inherit"
-                        onClick={handleClose}
-                      >
-                        <CloseIcon fontSize="small" />
-                      </IconButton>
-                    </React.Fragment>
-                  }
-                />
-              </div>
-            </>
-          )}
-        </>
-      )}
+      <Snackbar
+        open={message !== null}
+        autoHideDuration={3000}
+        onClose={(_e, reason) => reason !== "clickaway" && setMessage(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        message={message}
+      />
     </Box>
   );
 };

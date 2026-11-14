@@ -3,7 +3,8 @@
 
 const STORAGE_KEY = "rpe-scores";
 
-const emojis = ["😆", "😋", "😊", "🙂", "😉", "🤨", "😪", "😥", "😭", "🤮"];
+// Same faces as the score buttons.
+const emojis = ["😆", "😋", "😊", "🙂", "😉", "😯", "😪", "😥", "😭", "😵"];
 const colors = [
   "#5ce1e6",
   "#37b6fe",

@@ -37,7 +37,8 @@ const ResponsiveAppBar = () => {
       sx={{
         top: 0,
         left: 0,
-        width: "auto",
+        right: 0,
+        width: "100%",
         background: "black",
         margin: 0,
         padding: 0,
@@ -51,6 +52,7 @@ const ResponsiveAppBar = () => {
               navigate("/RPEScore");
               window.scrollTo(0, 0);
             }}
+            aria-label="Home"
           >
             <Avatar
               alt="logo"
