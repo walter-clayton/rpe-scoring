@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import RPEChart from "../../assets/RPE-Chart.png";
-import axios from "axios";
+import { saveScore } from "../../lib/rpeStore";
 import { Grid, Typography, Button } from "@mui/material";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -15,7 +15,6 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
 import Backdrop from "@mui/material/Backdrop";
 import { Theme } from "@mui/material/styles";
 
@@ -36,8 +35,6 @@ const colors = [
 const RPEScore = () => {
   const [showImage, setShowImage] = useState(false);
   const [open, setOpen] = useState(false);
-  const [buttonsDisabled, setButtonsDisabled] = useState(false);
-  const [loading, setLoading] = useState(false); // Loading state for progress indicator
   const [snackbarMessage, setSnackbarMessage] = useState<React.ReactNode>(""); // Snackbar message state
 
   const handleOpen = (message: React.ReactNode) => {
@@ -56,49 +53,27 @@ const RPEScore = () => {
     setOpen(false);
   };
 
-  const handleClick = async (num: number, emoji: string, colors: string) => {
-    setButtonsDisabled(true);
-    setLoading(true); // Show progress indicator
-
+  const handleClick = (num: number, emoji: string) => {
     try {
-      console.log("Sending POST request to backend...");
-
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_RPEPOST_URL}`,
-        {
-          emoji: emoji,
-          numeroClique: num,
-          colors: colors,
-        },
-        { withCredentials: true }
+      saveScore(num);
+      handleOpen(
+        <div>
+          <div>✅ You have registered your score!</div>
+          <div style={{ marginTop: "8px" }}>
+            {emoji} Your score is {num}.
+          </div>
+        </div>
       );
-
-      console.log("Response from backend:", response);
-
-      if (response.status === 201) {
-        console.log(`RPE data for ${emoji} clicked`);
-        handleOpen(
-          <div>
-            <div>✅ You have registered your score!</div>
-            <div style={{ marginTop: "8px" }}>
-              {emoji} Your score is {num}.
-            </div>
-          </div>
-        );
-      } else {
-        console.error("Error from server:", response.data);
-        handleOpen(
-          <div>
-            <div>❌ There was a problem registering your score.</div>
-            <div style={{ marginTop: "8px" }}>Please try again.</div>
-          </div>
-        );
-      }
     } catch (error) {
       console.error("Error saving RPE data:", error);
-    } finally {
-      setButtonsDisabled(false);
-      setLoading(false); // Hide progress indicator
+      handleOpen(
+        <div>
+          <div>❌ There was a problem registering your score.</div>
+          <div style={{ marginTop: "8px" }}>
+            Your browser is not allowing this page to save data.
+          </div>
+        </div>
+      );
     }
   };
   const theme = useTheme();
@@ -174,15 +149,7 @@ const RPEScore = () => {
             </Typography>
           </Grid>
 
-          {loading ? (
-            <Box
-              sx={{ display: "flex", justifyContent: "center" }}
-              data-testid="loader"
-            >
-              <CircularProgress size={100} />
-            </Box>
-          ) : (
-            <Grid
+          <Grid
               container
               justifyContent="center"
               alignItems="center"
@@ -211,8 +178,7 @@ const RPEScore = () => {
                       backgroundColor: colors[index],
                       borderRadius: "15px",
                     }}
-                    onClick={() => handleClick(index + 1, emoji, colors[index])}
-                    disabled={buttonsDisabled}
+                    onClick={() => handleClick(index + 1, emoji)}
                     data-testid={`score-button-${index + 1}`}
                   >
                     {index + 1}
@@ -220,7 +186,6 @@ const RPEScore = () => {
                 </Grid>
               ))}
             </Grid>
-          )}
 
           <Button
             startIcon={<ListAltIcon />}

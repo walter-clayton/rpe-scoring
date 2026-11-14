@@ -2,6 +2,12 @@
 
 > RPE Scoring main site built with React, Express, Node, and MongoDB.
 
+The live demo at https://rpe.afitpilot.com runs on the client alone: scores are
+saved in the visitor's browser (`client/src/lib/rpeStore.ts`), and it is hosted
+as a static site on Cloudflare Pages (root `client`, build `npm run build`,
+output `dist`). The Express and MongoDB server in `server/` is the original
+version and is no longer deployed.
+
 ## Quick Start
 
 ```bash
