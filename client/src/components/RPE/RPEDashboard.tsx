@@ -1,51 +1,26 @@
 import { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import { dailyAverages, DailyAverage } from "../../lib/rpeStore";
 import * as d3 from "d3";
 import { Grid, Typography, Box } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 
-interface RPEData {
-  _id: string;
-  averageScore: number;
-  color: string;
-  emoji: string;
-}
-
 const RPEDashboard = () => {
-  const [data, setData] = useState<RPEData[]>([]);
+  const [data, setData] = useState<DailyAverage[]>([]);
   const d3Container = useRef(null);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
-    fetchData();
+    setData(dailyAverages());
   }, []);
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(import.meta.env.VITE_API_RPEPOST_URL);
-
-      if (response.data.rpeData) {
-        const rpeDataWithDate = response.data.rpeData.map((d: RPEData) => ({
-          ...d,
-          _id: new Date(d._id),
-        }));
-
-        setData(rpeDataWithDate);
-      } else {
-        console.error("Error: response.data.rpeData is undefined");
-      }
-    } catch (error) {
-      console.error("Error fetching RPE data:", error);
-    }
-  };
 
   const getLastSevenDays = () => {
     const lastSevenDays = [];
 
     for (let i = 0; i < 7; i++) {
       const date = new Date();
+      date.setHours(0, 0, 0, 0);
       date.setDate(date.getDate() - i);
       lastSevenDays.push(date);
     }
