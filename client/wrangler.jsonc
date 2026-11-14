@@ -1,0 +1,10 @@
+// Hosting on Cloudflare Workers (free plan): serves the built site in dist/
+// and sends every unknown path, such as /RPEDashboard, to the app.
+{
+  "name": "rpe-scoring",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  }
+}
